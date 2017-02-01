@@ -21,8 +21,8 @@ int oneRound = 4300;   //3800;    // time en ms for a robot's rotation
 // Straight line
 int pulse_left_forward = -97;
 int pulse_right_forward = 198;
-int pulse_left_backward = -97;
-int pulse_right_backward = 198;
+int pulse_left_backward = 200;
+int pulse_right_backward = 100;
 
 
 /*****************************************************/  
@@ -83,7 +83,7 @@ void loop(){
   // functionality of the program
  
   // display student number
-  lcdDisplay("7499879", "7528357");
+  lcdDisplay("7373843", "7373843");
   
   // flashing of the led each 'timer' for 5 times
   ledFlashing(timer, 5);
@@ -119,20 +119,19 @@ void loop(){
   // path 1 reverse
  
   lcdDisplay("path 1", "reverse");
-  delay(3000);
-//  // instructions  
+  delay(1000);
+  // instructions  
   moveBackward(factor*timer); 
-  rotateClockwise(2*rotation_45);                  // turn right
+  rotateClockwise(3.5*rotation_45);                  // turn right
   moveBackward(factor*timer);  
   rotateCounterClockwise(2*rotation_45);           // turn left
   moveBackward(factor*timer);  
   rotateCounterClockwise(2*rotation_45);           // turn left
   moveBackward(factor*timer);  
-  rotateClockwise(2*rotation_45);                  // turn right
+  rotateClockwise(3.5*rotation_45);                  // turn right
   moveBackward(factor*timer); 
   stopped(); 
-//  
-//  
+ 
 //  /******************************************/
 //  // path 2
   lcdDisplay("path 2", "");
@@ -150,13 +149,12 @@ void loop(){
   moveForward(factor*timer);  
   stopped();
 
-//  /******************************************/
-//  // path 2 reverse
-//
+  /******************************************/
+  // path 2 reverse
   lcdDisplay("path 2", "reverse");
   delay(3000);
 
-//  // instructions
+  // instructions
   moveBackward(factor*timer);  
   rotateClockwise(2*rotation_45);                    // turn right  (90°)
   moveBackward(factor*timer);  
@@ -167,8 +165,6 @@ void loop(){
   rotateCounterClockwise(2*rotation_45);             // turn left   (90°)
   moveBackward(factor*timer);  
   stopped();
-
-  
 }
 
 
