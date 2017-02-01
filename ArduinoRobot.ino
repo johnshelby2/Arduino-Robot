@@ -1,6 +1,7 @@
 // Header files
 #include <SoftwareSerial.h> 
 
+
 // Global variables
 int timer = 1000;    // definition of a time unit 1000s
 int factor = 3;      // defintion  of a multiplicator factor
@@ -11,16 +12,20 @@ int motor_right_pin = 45;
 int pulse_left_rotation = 10;      // do not change these values
 int pulse_right_rotation = 191.5;
 
+/*****************************************************/
+// Calibration values (change them according experimental results)
+
 // Rotating
-int oneRound = 4300;   //4300;    // time en ms for a robot's rotation      
+int oneRound = 4300;   //3800;    // time en ms for a robot's rotation      
 
 // Straight line
-int pulse_left_forward = 193;
-int pulse_right_forward = 153;
+int pulse_left_forward = -97;
+int pulse_right_forward = 198;
+int pulse_left_backward = -97;
+int pulse_right_backward = 198;
 
-int pulse_left_backward = 10;
-int pulse_right_backward = 191.5;
 
+/*****************************************************/  
 // global variables (suite)
 int board_LED = 13;
 int LCD_display = 18;
@@ -30,7 +35,9 @@ String topLine= "";
 String bottomLine= "";
 
 int rotation_45 = oneRound/8;    // unit of rotation
- 
+
+
+/*****************************************************/  
 /* Macros of all possible directions of both motors
  *
  *  Directions : stop, forward, backward
@@ -46,6 +53,8 @@ int rotation_45 = oneRound/8;    // unit of rotation
 #define MacroBackwardMotorLeft() analogWrite(motor_left_pin, pulse_left_backward)
 #define MacroBackwardMotorRight() analogWrite(motor_right_pin, pulse_right_backward)
 
+
+/*****************************************************/  
 // The setup routine runs once when you press reset:
 // This function is called before the loop() function
 void setup(){
@@ -65,13 +74,16 @@ void setup(){
 
 }
 
+
+
+/*****************************************************/  
 // The loop routine runs over and over again forever:
 void loop(){ 
   // The instructions executed to perform the main
   // functionality of the program
  
   // display student number
-  lcdDisplay("7373843", "HAMID");
+  lcdDisplay("7499879", "7528357");
   
   // flashing of the led each 'timer' for 5 times
   ledFlashing(timer, 5);
@@ -83,41 +95,79 @@ void loop(){
   // Wait few second (5s) 
   delay(5000);
   
+  
+  /******************************************/  
   // path 1  
+  
   lcdDisplay("path 1", "");
-  delay(3000);
+  delay(1000);
 
   // instructions
   moveForward(factor*timer);
-  stopped();
-  rotateCounterClockwise(1010);           // turn left
-  moveForward(factor*timer); 
-  stopped(); 
-  rotateClockwise(1450);                  // turn right
-  moveForward(factor*timer);
-  stopped();
-  rotateClockwise(1450);     // turn right
-  moveForward(factor*timer);
-  stopped();
-  rotateCounterClockwise(1010);           // turn left
-  moveForward(factor*timer);
+  rotateCounterClockwise(2*rotation_45);           // turn left
+  moveForward(factor*timer);  
+  rotateClockwise(3.5*rotation_45);                  // turn right
+  moveForward(factor*timer);  
+  rotateClockwise(3.5*rotation_45);                  // turn right
+  moveForward(factor*timer);  
+  rotateCounterClockwise(2*rotation_45);           // turn left
+  moveForward(factor*timer);  
   stopped(); 
   
-//  // path 2
-//  lcdDisplay("path 2", "");
-//  delay(3000);
+  
+  /******************************************/
+  // path 1 reverse
+ 
+  lcdDisplay("path 1", "reverse");
+  delay(3000);
+//  // instructions  
+  moveBackward(factor*timer); 
+  rotateClockwise(2*rotation_45);                  // turn right
+  moveBackward(factor*timer);  
+  rotateCounterClockwise(2*rotation_45);           // turn left
+  moveBackward(factor*timer);  
+  rotateCounterClockwise(2*rotation_45);           // turn left
+  moveBackward(factor*timer);  
+  rotateClockwise(2*rotation_45);                  // turn right
+  moveBackward(factor*timer); 
+  stopped(); 
 //  
+//  
+//  /******************************************/
+//  // path 2
+  lcdDisplay("path 2", "");
+  delay(1000);
+  
+  // instructions
+  moveForward(factor*timer);  
+  rotateClockwise(2*rotation_45);                    // turn right  (90°)
+  moveForward(factor*timer/2);  
+  rotateCounterClockwise(3*rotation_45);             // turn left  (135°)
+  moveForward(factor*timer);  
+  rotateClockwise(3*rotation_45);                    // turn right (135°)
+  moveForward(factor*timer);  
+  rotateCounterClockwise(2*rotation_45);             // tunr left   (90°)
+  moveForward(factor*timer);  
+  stopped();
+
+//  /******************************************/
+//  // path 2 reverse
+//
+  lcdDisplay("path 2", "reverse");
+  delay(3000);
+
 //  // instructions
-//  moveForward(factor*timer);  
-//  rotateClockwise(2*rotation_45);                    // turn right  (90°)
-//  moveForward(factor*timer/2);  
-//  rotateCounterClockwise(3*rotation_45);             // turn left  (135°)
-//  moveForward(factor*timer);  
-//  rotateClockwise(3*rotation_45);                    // turn right (135°)
-//  moveForward(factor*timer);  
-//  rotateCounterClockwise(2*rotation_45);             // tunr left   (90°)
-//  moveForward(factor*timer);  
-//  stopped();
+  moveBackward(factor*timer);  
+  rotateClockwise(2*rotation_45);                    // turn right  (90°)
+  moveBackward(factor*timer);  
+  rotateCounterClockwise(3*rotation_45);             // turn left  (135°)
+  moveBackward(factor*timer);  
+  rotateClockwise(7*rotation_45);                    // turn right (315°)
+  moveBackward(factor*timer);  
+  rotateCounterClockwise(2*rotation_45);             // turn left   (90°)
+  moveBackward(factor*timer);  
+  stopped();
+
   
 }
 
@@ -134,7 +184,7 @@ void loop(){
   */
 
 
- /*  Name : stopped function which stops the robot all the time
+ /*  Name : stopped                    function which stops the robot all the time
   *  Param In : t_delay, int variable, time parameter
   *  Param Out :
   *  Return :
@@ -145,7 +195,7 @@ void stopped(){
   MacroStopMotorRight();
 }
 
- /*  Name : moveForward function which allow to move the robot forward for a delay given in parameter
+ /*  Name : moveForward                function which allow to move the robot forward for a delay given in parameter
   *  Param In : t_delay, int variable, time parameter
   *  Param Out :
   *  Return :
@@ -157,7 +207,7 @@ void moveForward(int t_delay){
   delay(t_delay);
 }
 
- /*  Name : moveBackward function which allow to move the robot backward for a delay given in parameter
+ /*  Name : moveBackward              function which allow to move the robot backward for a delay given in parameter
   *  Param In : t_delay, int variable, time parameter
   *  Param Out :.
   *  Return :
@@ -169,7 +219,7 @@ void moveBackward(int t_delay){
   delay(t_delay);
 }
 
- /*  Name : rotateClockwise function which allow to rotate the robot clockwise for a delay given in parameter
+ /*  Name : rotateClockwise    function which allow to rotate the robot clockwise for a delay given in parameter
   *  Param In : t_delay, int variable, time parameter
   *  Param Out :
   
@@ -182,7 +232,7 @@ void rotateClockwise(int t_delay){              // rotate to the right
   delay(t_delay);
 }
 
- /*  Name : rotateCounterClockwise function which allow to rotate the robot counter clockwise for a delay given in parameter
+ /*  Name : rotateCounterClockwise    function which allow to rotate the robot counter clockwise for a delay given in parameter
   *  Param In : t_delay, int variable, time parameter
   *  Param Out :
   *  Return :
@@ -194,6 +244,8 @@ void rotateCounterClockwise(int t_delay){        // rotate to the left
   delay(t_delay);
 }
 
+
+/****************************************************************/
 /*  LCD functions
  *
  *  ledFlashing(int t_delay, int n_flash)
@@ -289,6 +341,9 @@ void backlightOn(){
   delay(10);
 }
 
+
+
+/****************************************************************/
 void displayOn(){ 
   LCD.write(0xFE);    // Put LCD in command mode
   LCD.write(0x0C);    // Turn on the display
@@ -304,3 +359,5 @@ void backlightOff(){
     LCD.write(0x80);  // Turn off back light
    delay(10);
 }
+
+
